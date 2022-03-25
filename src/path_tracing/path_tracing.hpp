@@ -1,0 +1,12 @@
+#ifndef RAYTRACING_PATH_TRACING_HPP
+#define RAYTRACING_PATH_TRACING_HPP
+#include "utils.hpp"
+#include "geometries/sphere.hpp"
+#include "hittable_list.hpp"
+#include "camera.hpp"
+#include "color.hpp"
+#include "ray.hpp"
+#include "texture/lambertian.hpp"
+#include "texture/metal.hpp"
+#include "texture/dielectric.hpp"
+#endif //RAYTRACING_PATH_TRACING_HPP
