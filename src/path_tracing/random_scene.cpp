@@ -60,7 +60,7 @@ hittable_list &random_scene(Random &random) {
 int main() {
     std::ofstream file(R"(D:\Projects\RayTracing\pic.ppm)");
     double ratio = 3.0 / 2.0;
-    int img_width = 1000;
+    int img_width = 300;
     int img_height = int(img_width / ratio);
     int samples_per_pixel = 100;
     int depth = 50;

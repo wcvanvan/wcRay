@@ -2,6 +2,7 @@
 #define RAYTRACING_PATH_TRACING_HPP
 #include "utils.hpp"
 #include "geometries/sphere.hpp"
+#include "geometries/triangle.hpp"
 #include "hittable_list.hpp"
 #include "camera.hpp"
 #include "color.hpp"
