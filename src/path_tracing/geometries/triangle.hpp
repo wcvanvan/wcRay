@@ -1,8 +1,10 @@
 #ifndef RENDERER_TRIANGLE_HPP
 #define RENDERER_TRIANGLE_HPP
 
-#include "hittable.hpp"
+#include "hit.hpp"
+#include "aabb.hpp"
 #include <limits>
+#include <algorithm>
 
 class triangle : public hittable {
 public:
@@ -14,10 +16,12 @@ public:
                                                                  material_ptr(std::move(_material_ptr)) {};
 
     bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+
+    std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
 bool triangle::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    bool hit_plane = false;
+    bool hit_plane;
     // plane expression: Ax + By + Cz = D
     vec3 normal = (C - A).cross(B - A);
     hit_plane = r.direction.dot(normal) != 0;
@@ -37,12 +41,35 @@ bool triangle::hit(const ray &r, double t_min, double t_max, hit_record &record)
     if (!inside_triangle) {
         return false;
     }
-    record.normal = normal;
+    record.set_face_normal(r, normal);
     record.material_ptr = material_ptr;
     record.exterior_hit = true;
     record.t = t;
     record.hit_point = hit_point;
     return true;
+}
+
+std::shared_ptr<aabb> triangle::bounding_box(double time0, double time1, bool &bounded) const {
+    bounded = true;
+    double x_min = std::min(std::min(A.x(), B.x()), C.x());
+    double y_min = std::min(std::min(A.y(), B.y()), C.y());
+    double z_min = std::min(std::min(A.z(), B.z()), C.z());
+    double x_max = std::max(std::max(A.x(), B.x()), C.x());
+    double y_max = std::max(std::max(A.y(), B.y()), C.y());
+    double z_max = std::max(std::max(A.z(), B.z()), C.z());
+    if (x_min == x_max) {
+        x_min -= 0.0001;
+        x_max += 0.0001;
+    }
+    if (y_min == y_max) {
+        y_min -= 0.0001;
+        y_max += 0.0001;
+    }
+    if (z_min == z_max) {
+        z_min -= 0.0001;
+        z_max += 0.0001;
+    }
+    return std::make_shared<aabb>(point3(x_min, y_min, z_min), point3(x_max, y_max, z_max));
 }
 
 #endif //RENDERER_TRIANGLE_HPP

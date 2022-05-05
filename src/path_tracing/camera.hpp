@@ -11,12 +11,12 @@ private:
     point3 lower_left_corner;
     double lens_radius;
     vec3 horizontal_unit, vertical_unit, look_unit;
-    Random *random;
+    double time_start, time_end;
 
 public:
     camera(const point3 &look_from, const point3 &look_to, const vec3 &view_up, double fov_vertical,
-           double aspect_ratio, double aperture, double focus_dist, Random &_random) {
-        random = &_random;
+           double aspect_ratio, double aperture, double focus_dist, double _time_start,
+           double _time_end) : time_start(_time_start), time_end(_time_end) {
         const double radian = degrees_to_radians(fov_vertical);
         const double viewport_height = 2 * tan(radian / 2);
         const double viewport_width = viewport_height * aspect_ratio;
@@ -31,11 +31,12 @@ public:
     }
 
     ray get_ray(double vertical_coefficient, double horizontal_coefficient) {
-        vec3 offset = lens_radius * random->random_in_unit_disk();
+        vec3 offset = lens_radius * random_in_unit_disk();
         point3 ray_start_point =
                 origin + offset.x() * horizontal_unit + offset.y() * vertical_unit;
         return {ray_start_point, lower_left_corner + horizontal * horizontal_coefficient +
-                                 vertical * vertical_coefficient - ray_start_point};
+                                 vertical * vertical_coefficient - ray_start_point,
+                random_number(time_start, time_end)};
     }
 };
 

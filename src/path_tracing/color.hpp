@@ -1,25 +1,27 @@
 #ifndef RAYTRACING_COLOR_HPP
 #define RAYTRACING_COLOR_HPP
+
 #include "ray.hpp"
-#include "geometries/hittable.hpp"
+#include "geometries/hit.hpp"
 #include "utils.hpp"
 
 
-color ray_color(ray &r, hittable &world, int depth, Random &random) {
+color ray_color(ray &r, const hittable_list &world, color &background, int depth) {
     if (depth <= 0) {
         return {0, 0, 0};
     }
     hit_record record;
     if (world.hit(r, 0.001, infinity, record)) {
+        color emit = record.material_ptr->emit(record.u, record.v, record.hit_point);
         ray scattered;
         color albedo;
         if (record.material_ptr->scatter(r, record, albedo, scattered)) {
-            return albedo * ray_color(scattered, world, depth - 1, random);
+            return emit + albedo * ray_color(scattered, world, background, depth - 1);
+        } else {
+            return emit;
         }
     } else {
-        double y = r.direction.y();
-        double u = (y + 1) / 2.;
-        return color(color(1.0, 1.0, 1.0) * (1 - u) + color(0.5, 0.7, 1.0) * u);
+        return background;
     }
 }
 

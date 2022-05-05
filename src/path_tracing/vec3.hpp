@@ -5,65 +5,54 @@
 
 class vec3 {
 public:
-    double e[3]{0., 0., 0.};
+    double value[3]{0., 0., 0.};
 
     vec3() = default;
 
-    vec3(double x, double y, double z) : e{x, y, z} {}
+    vec3(double x, double y, double z) : value{x, y, z} {}
 
     vec3(const vec3 &v) {
         *this = v;
     }
 
-    double x() const {
-        return e[0];
+    [[nodiscard]] double x() const {
+        return value[0];
 
     }
 
-    double y() const {
-        return e[1];
+    [[nodiscard]] double y() const {
+        return value[1];
 
     }
 
-    double z() const {
-        return e[2];
+    [[nodiscard]] double z() const {
+        return value[2];
     }
 
-    void setX(double x) {
-        e[0] = x;
-    }
-
-    void setY(double y) {
-        e[1] = y;
-    }
-
-    void setZ(double z) {
-        e[2] = z;
-    }
 
     vec3 &operator=(const vec3 &v) {
-        e[0] = v.e[0];
-        e[1] = v.e[1];
-        e[2] = v.e[2];
+        value[0] = v.value[0];
+        value[1] = v.value[1];
+        value[2] = v.value[2];
         return *this;
     }
 
     bool operator==(const vec3 &v) {
-        return (e[0] == v.e[0] && e[1] == v.e[1] && e[2] == v.e[2]);
+        return (value[0] == v.value[0] && value[1] == v.value[1] && value[2] == v.value[2]);
     }
 
     double &operator[](int index) {
         if (index >= 0 && index <= 2) {
-            return e[index];
+            return value[index];
         } else {
             std::cerr << "Error in File \"" << __FILE__ << "\", Function " << __FUNCTION__ << ", Line " << __LINE__
                       << ": Index out of bound" << std::endl;
-            return e[0];
+            return value[0];
         }
     }
 
     vec3 operator+(double t) const {
-        return vec3{e[0] + t, e[1] + t, e[2] + t};
+        return vec3{value[0] + t, value[1] + t, value[2] + t};
     }
 
     friend vec3 operator+(double t, const vec3 &v) {
@@ -71,25 +60,25 @@ public:
     }
 
     vec3 operator+(const vec3 &v) const {
-        return vec3{e[0] + v.e[0], e[1] + v.e[1], e[2] + v.e[2]};
+        return vec3{value[0] + v.value[0], value[1] + v.value[1], value[2] + v.value[2]};
     }
 
     vec3 &operator+=(double t) {
-        e[0] += t;
-        e[1] += t;
-        e[2] += t;
+        value[0] += t;
+        value[1] += t;
+        value[2] += t;
         return *this;
     }
 
     vec3 &operator+=(const vec3 &v) {
-        e[0] += v.e[0];
-        e[1] += v.e[1];
-        e[2] += v.e[2];
+        value[0] += v.value[0];
+        value[1] += v.value[1];
+        value[2] += v.value[2];
         return *this;
     }
 
     vec3 operator-(double t) const {
-        return {e[0] - t, e[1] - t, e[2] - t};
+        return {value[0] - t, value[1] - t, value[2] - t};
     }
 
     friend vec3 operator-(double t, const vec3 &v) {
@@ -97,25 +86,25 @@ public:
     }
 
     vec3 operator-(const vec3 &v) const {
-        return vec3{e[0] - v.e[0], e[1] - v.e[1], e[2] - v.e[2]};
+        return vec3{value[0] - v.value[0], value[1] - v.value[1], value[2] - v.value[2]};
     }
 
     vec3 &operator-=(double t) {
-        e[0] -= t;
-        e[1] -= t;
-        e[2] -= t;
+        value[0] -= t;
+        value[1] -= t;
+        value[2] -= t;
         return *this;
     }
 
     vec3 &operator-=(const vec3 &v) {
-        e[0] -= v.e[0];
-        e[1] -= v.e[1];
-        e[2] -= v.e[2];
+        value[0] -= v.value[0];
+        value[1] -= v.value[1];
+        value[2] -= v.value[2];
         return *this;
     }
 
     vec3 operator*(double t) const {
-        return vec3{e[0] * t, e[1] * t, e[2] * t};
+        return vec3{value[0] * t, value[1] * t, value[2] * t};
     }
 
     friend vec3 operator*(double t, const vec3 &v) {
@@ -123,19 +112,19 @@ public:
     }
 
     vec3 &operator*=(double t) {
-        e[0] *= t;
-        e[1] *= t;
-        e[2] *= t;
+        value[0] *= t;
+        value[1] *= t;
+        value[2] *= t;
         return *this;
     }
 
     vec3 operator*(const vec3 &v) const {
-        return {e[0] * v.x(), e[1] * v.y(), e[2] * v.z()};
+        return {value[0] * v.x(), value[1] * v.y(), value[2] * v.z()};
     }
 
     vec3 operator/(double t) const {
         if (t != 0) {
-            return vec3{e[0] / t, e[1] / t, e[2] / t};
+            return vec3{value[0] / t, value[1] / t, value[2] / t};
         } else {
             std::cerr << "Error in File \"" << __FILE__ << "\", Function " << __FUNCTION__ << ", Line " << __LINE__
                       << ": divisor must not be 0" << std::endl;
@@ -145,9 +134,9 @@ public:
 
     vec3 &operator/=(double t) {
         if (t != 0) {
-            e[0] /= t;
-            e[1] /= t;
-            e[2] /= t;
+            value[0] /= t;
+            value[1] /= t;
+            value[2] /= t;
         } else {
             std::cerr << "Error in File \"" << __FILE__ << "\", Function " << __FUNCTION__ << ", Line " << __LINE__
                       << ": divisor must not be 0" << std::endl;
@@ -155,48 +144,43 @@ public:
         return *this;
     }
 
-    double dot(const vec3 &v) const {
-        return e[0] * v.e[0] + e[1] * v.e[1] + e[2] * v.e[2];
+    [[nodiscard]] double dot(const vec3 &v) const {
+        return value[0] * v.value[0] + value[1] * v.value[1] + value[2] * v.value[2];
     }
 
-    vec3 cross(const vec3 &v) const {
-        return vec3{e[1] * v.e[2] - e[2] * v.e[1],
-                    e[2] * v.e[0] - e[0] * v.e[2],
-                    e[0] * v.e[1] - e[1] * v.e[0]};
+    [[nodiscard]] vec3 cross(const vec3 &v) const {
+        return vec3{value[1] * v.value[2] - value[2] * v.value[1],
+                    value[2] * v.value[0] - value[0] * v.value[2],
+                    value[0] * v.value[1] - value[1] * v.value[0]};
     }
 
-    double length() const {
-        return sqrt(pow(e[0], 2) + pow(e[1], 2) + pow(e[2], 2));
+    [[nodiscard]] double length() const {
+        return sqrt(pow(value[0], 2) + pow(value[1], 2) + pow(value[2], 2));
     }
 
-    double length_squared() const {
-        return pow(e[0], 2) + pow(e[1], 2) + pow(e[2], 2);
+    [[nodiscard]] double length_squared() const {
+        return pow(value[0], 2) + pow(value[1], 2) + pow(value[2], 2);
     }
 
-    vec3 unit_vector() const {
+    [[nodiscard]] vec3 unit_vector() const {
         return vec3{*this / length()};
     }
 
 
     friend std::ostream &operator<<(std::ostream &out, const vec3 &v) {
-        out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
+        out << v.value[0] << ' ' << v.value[1] << ' ' << v.value[2];
         return out;
     }
 
     bool near_zero() {
         const double min = 1e-8;
-        if (fabs(e[0]) < min && fabs(e[1]) < min && fabs(e[2]) < min) {
+        if (fabs(value[0]) < min && fabs(value[1]) < min && fabs(value[2]) < min) {
             return true;
         }
         return false;
     }
 
-    //    vec3 refract(const vec3 &normal, double refraction_ratio) const {
-    ////        double cos_theta = fmin((*this * (-1)).dot(normal), 1.0);
-    ////        vec3 r_out_perp = (*this + normal * cos_theta) * refraction_ratio;
-    ////        vec3 r_out_parallel = normal * -sqrt(fabs(1.0 - sqrt(r_out_perp.length())));
-    ////        return r_out_parallel + r_out_perp;
-    //    }
+
 
     static vec3 refract(const vec3 &vec_in, const vec3 &n, double etai_over_etat) {
         auto cos_theta = fmin(-vec_in.dot(n), 1.0);

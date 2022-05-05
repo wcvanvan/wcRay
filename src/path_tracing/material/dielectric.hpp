@@ -4,16 +4,14 @@
 #include "material.hpp"
 #include "../vec3.hpp"
 #include "../ray.hpp"
-#include "../geometries/hittable.hpp"
+#include "../geometries/hit.hpp"
 #include "../utils.hpp"
 
 class dielectric : public material {
 public:
     double refraction_idx{};
-    const Random *random{};
 
-    explicit dielectric(double _refraction_idx, const Random &_random) : refraction_idx(_refraction_idx),
-                                                                         random(&(_random)) {}
+    explicit dielectric(double _refraction_idx) : refraction_idx(_refraction_idx) {}
 
     bool scatter(const ray &r_in, const hit_record &record, color &_albedo, ray &scattered) const override;
 
@@ -35,14 +33,14 @@ bool dielectric::scatter(const ray &r_in, const hit_record &record, color &_albe
     double cos_theta = fmin(unit_direction.dot((-1) * counter_normal), 1.0);
     double sin_theta = sqrt(1 - pow(cos_theta, 2));
     bool cannot_refract = (sin_theta * refraction_ratio) > 1;
-    cannot_refract = cannot_refract || reflectance(cos_theta, refraction_ratio) > random->random_number();
+    cannot_refract = cannot_refract || reflectance(cos_theta, refraction_ratio) > random_number();
     vec3 scattered_direction;
     if (cannot_refract) {
         scattered_direction = vec3::reflect(unit_direction, counter_normal);
     } else {
         scattered_direction = vec3::refract(unit_direction, counter_normal, refraction_ratio);
     }
-    scattered = ray{record.hit_point, scattered_direction};
+    scattered = ray{record.hit_point, scattered_direction, r_in.time};
     return true;
 }
 
