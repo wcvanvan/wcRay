@@ -27,6 +27,7 @@ bool translate::hit(const ray &r, double t_min, double t_max, hit_record &record
         return false;
     }
     record.hit_point += offset;
+    record.set_face_normal(r_moved, record.normal);
     return true;
 }
 

@@ -14,7 +14,7 @@ public:
     double time_start, time_end;
     std::shared_ptr<material> material_ptr;
 
-    explicit moving_sphere(const point3 &p0, const point3 &p1, double _radius, std::shared_ptr<material> _material_ptr,
+    explicit moving_sphere(point3 p0, point3 p1, double _radius, std::shared_ptr<material> _material_ptr,
                            double _time_start, double _time_end) :
             radius(_radius),
             material_ptr(std::move(

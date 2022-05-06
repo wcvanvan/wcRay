@@ -77,7 +77,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>> &objects, int st
     if (!bounded0 || !bounded1) {
         std::cerr << "no bounding box" << std::endl;
     }
-    box = aabb::surrounding_box(std::move(box_left), std::move(box_right));
+    box = aabb::surrounding_box(box_left, box_right);
 }
 
 std::shared_ptr<aabb> bvh_node::bounding_box(double time0, double time1, bool &bounded) const {

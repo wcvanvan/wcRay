@@ -12,7 +12,9 @@ public:
     vec3(double x, double y, double z) : value{x, y, z} {}
 
     vec3(const vec3 &v) {
-        *this = v;
+        value[0] = v.x();
+        value[1] = v.y();
+        value[2] = v.z();
     }
 
     [[nodiscard]] double x() const {

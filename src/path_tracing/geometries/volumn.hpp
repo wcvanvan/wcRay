@@ -46,9 +46,9 @@ bool volumn::hit(const ray &r, double t_min, double t_max, hit_record &record) c
     record.normal = vec3(0, 0, 1); //arbitrary, no use
     record.material_ptr = iso;
 
-    std::cerr << "hit_distance = " << hit_distance << '\n'
-              << "rec.t = " << record.t << '\n'
-              << "rec.p = " << record.hit_point << '\n';
+//    std::cerr << "hit_distance = " << hit_distance << '\n'
+//              << "rec.t = " << record.t << '\n'
+//              << "rec.p = " << record.hit_point << '\n';
     return true;
 }
 

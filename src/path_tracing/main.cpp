@@ -9,34 +9,83 @@ using std::make_shared;
 using std::shared_ptr;
 using std::shared_ptr;
 
+std::shared_ptr<hittable_list> final_scene() {
+    hittable_list objects;
+
+    // Cornell box
+    auto red = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto light = make_shared<diffuse_light>(std::make_shared<solid_color>(color(7, 7, 7)));
+    auto noise1 = std::make_shared<lambertian>(std::make_shared<noise_texture>(0.005, 1));
+
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+    objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, noise1));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+    // smoke box
+    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
+
+    shared_ptr<hittable> box2 = make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+
+    objects.add(make_shared<volumn>(box1, 0.01,
+                                    std::make_shared<isotropic>(std::make_shared<solid_color>(color(1, 1, 1)))));
+    objects.add(make_shared<volumn>(box2, 0.01,
+                                    std::make_shared<isotropic>(std::make_shared<solid_color>(color(0, 0, 0)))));
+
+//    // Fill with spheres
+    auto earth_texture = make_shared<image_texture>(R"(D:\Projects\RayTracing\src\resources\earthmap.jpg)");
+    auto earth_surface = make_shared<lambertian>(earth_texture);
+    auto globe = make_shared<sphere>(point3(310, 400, 165), 50, earth_surface);
+    objects.add(globe);
+
+    auto white_metal = std::make_shared<metal>(color(.73, .73, .73), 0);
+    objects.add(std::make_shared<sphere>(point3(170, 250, 220), 50, white_metal));
+
+    auto mov_sphere = make_shared<moving_sphere>(point3(140, 450, 350), point3(190, 450, 350), 50,
+                                                 make_shared<lambertian>(color(0.4, 0.4, 0.5)), 0.0, 1.0);
+    objects.add(mov_sphere);
+
+    objects.add(make_shared<sphere>(point3(490, 370, 350), 50, make_shared<dielectric>(1.5)));
+
+
+    return std::make_shared<hittable_list>(objects);
+}
+
 std::shared_ptr<hittable_list> cornell_smoke() {
     hittable_list objects;
 
-    auto red = make_shared<metal>(color(.65, .05, .05), 0.7);
-    auto white = make_shared<metal>(color(.73, .73, .73), 0.7);
-    auto green = make_shared<metal>(color(.12, .45, .15), 0.7);
+    auto red = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(std::make_shared<solid_color>(color(7, 7, 7)));
 
-//    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
-//    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
-//    objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
-////    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
-//    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
-//    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
-//
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+    objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
-//    box1 = make_shared<rotate_y>(box1, 15);
-//    box1 = make_shared<translate>(box1, vec3(265,0,295));
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
 
     shared_ptr<hittable> box2 = make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
-//    box2 = make_shared<rotate_y>(box2, -18);
-//    box2 = make_shared<translate>(box2, vec3(130,0,65));
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
 
     objects.add(make_shared<volumn>(box1, 0.01,
                                     std::make_shared<isotropic>(std::make_shared<solid_color>(color(0, 0, 0)))));
     objects.add(make_shared<volumn>(box2, 0.01,
                                     std::make_shared<isotropic>(std::make_shared<solid_color>(color(1, 1, 1)))));
-
     return std::make_shared<hittable_list>(objects);
 }
 
@@ -73,34 +122,27 @@ std::shared_ptr<hittable_list> lsd_box() {
 shared_ptr<hittable_list> cornell_box() {
     hittable_list objects;
 
-    auto red = make_shared<metal>(color(.65, .05, .05), 0);
-    auto white = make_shared<metal>(color(.73, .73, .73), 0.7);
-    auto green = make_shared<metal>(color(.12, .45, .15), 0.7);
-    auto green_metal = make_shared<metal>(color(.12, .45, .15), 0);
+    auto red = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(std::make_shared<solid_color>(color(5, 5, 5)));
 
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
-    point3 light_center(250, 50, 250);
-//    objects.add(make_shared<sphere>(light_center, 50, light));
     objects.add(make_shared<xz_rect>(100, 450, 100, 450, 550, light));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
-    point3 center(250, 270, 270);
-//    point3 point1(100,100,50), point2(200,100,50), point3(150, 200,50);
-//    objects.add(std::make_shared<triangle>(point1, point2, point3, green_metal));
-    objects.add(std::make_shared<sphere>(center, 100, green_metal));
-//
-//    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
-//    box1 = make_shared<rotate_y>(box1, 15);
-//    box1 = make_shared<translate>(box1, vec3(265,0,295));
-//    objects.add(box1);
-//
-//    shared_ptr<hittable> box2 = make_shared<box>(point3(0,0,0), point3(165,165,165), white);
-//    box2 = make_shared<rotate_y>(box2, -18);
-//    box2 = make_shared<translate>(box2, vec3(130,0,65));
-//    objects.add(box2);
+
+    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
+    objects.add(box1);
+
+    shared_ptr<hittable> box2 = make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+    objects.add(box2);
     return std::make_shared<hittable_list>(objects);
 }
 
@@ -209,7 +251,7 @@ shared_ptr<hittable_list> random_scene() {
 
 int main() {
     std::ofstream file(R"(D:\Projects\RayTracing\pic.ppm)");
-    int scene = 4;
+    int scene = 9;
     shared_ptr<hittable_list> world;
     double aspect_ratio;
     int image_width;
@@ -241,6 +283,9 @@ int main() {
 
         case 3:
             world = two_perlin_spheres();
+            image_width = 200;
+            samples_per_pixel = 100;
+            aspect_ratio = 1.0;
             background = color(0.70, 0.80, 1.00);
             lookfrom = point3(13, 2, 3);
             lookat = point3(0, 0, 0);
@@ -280,12 +325,12 @@ int main() {
         case 7:
             world = cornell_smoke();
             aspect_ratio = 1.0;
-            image_width = 100;
-            samples_per_pixel = 200;
+            image_width = 400;
+            samples_per_pixel = 400;
             lookfrom = point3(278, 278, -800);
             lookat = point3(278, 278, 0);
             vfov = 40.0;
-            background = color(0.3, 0.5, 0.2);
+            background = color(0, 0, 0);
             break;
         case 8:
             world = lsd_box();
@@ -296,6 +341,16 @@ int main() {
 //            background = color(0, 0, 0);
             lookfrom = point3(700, 278, -500);
             lookat = point3(400, 278, 0);
+            vfov = 40.0;
+            break;
+        case 9:
+            world = final_scene();
+            aspect_ratio = 1.0;
+            image_width = 600;
+            samples_per_pixel = 3000;
+            background = color(0, 0, 0);
+            lookfrom = point3(278, 278, -800);
+            lookat = point3(278, 278, 0);
             vfov = 40.0;
             break;
         default:

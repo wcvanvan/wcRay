@@ -9,15 +9,26 @@
 class xy_rect : public hittable {
 public:
     double x0, x1, y0, y1, z;
+    // (x0, y0) will be the closest corner, (x1, y1) will be the farthest corner
     std::shared_ptr<material> material_ptr;
 
-    xy_rect(double _x0, double _x1, double _y0, double _y1, double _z, std::shared_ptr<material> mat) : x0(_x0),
-                                                                                                        x1(_x1),
-                                                                                                        y0(_y0),
-                                                                                                        y1(_y1), z(_z),
-                                                                                                        material_ptr(
-                                                                                                                std::move(
-                                                                                                                        mat)) {}
+    xy_rect(double _x0, double _x1, double _y0, double _y1, double _z, std::shared_ptr<material> mat) :
+            material_ptr(std::move(mat)), z(_z) {
+        if (_x0 < _x1) {
+            x0 = _x0;
+            x1 = _x1;
+        } else {
+            x0 = _x1;
+            x1 = _x0;
+        }
+        if (_y0 < _y1) {
+            y0 = _y0;
+            y1 = _y1;
+        } else {
+            y0 = _y1;
+            y1 = _y0;
+        }
+    }
 
     bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
 
@@ -26,15 +37,17 @@ public:
 };
 
 bool xy_rect::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    record.t = (z - r.origin.z()) / r.direction.z();
-    if (record.t < t_min || record.t > t_max) {
+    double t = (z - r.origin.z()) / r.direction.z();
+    if (t < t_min || t > t_max) {
         return false;
     }
-    record.hit_point = point3(r.at(record.t));
-    if (record.hit_point.x() < x0 || record.hit_point.x() > x1 || record.hit_point.y() < y0 ||
-        record.hit_point.y() > y1) {
+    auto hit_point = r.at(t);
+    if (hit_point.x() < x0 || hit_point.x() > x1 || hit_point.y() < y0 ||
+        hit_point.y() > y1) {
         return false;
     }
+    record.t = t;
+    record.hit_point = hit_point;
     record.material_ptr = material_ptr;
     record.set_face_normal(r, vec3(0, 0, 1));
     record.exterior_hit = true;
@@ -49,19 +62,28 @@ std::shared_ptr<aabb> xy_rect::bounding_box(double time0, double time1, bool &bo
 }
 
 
-
 class xz_rect : public hittable {
 public:
     double x0, x1, z0, z1, y;
     std::shared_ptr<material> material_ptr;
 
-    xz_rect(double _x0, double _x1, double _z0, double _z1, double _y, std::shared_ptr<material> mat) : x0(_x0),
-                                                                                                        x1(_x1),
-                                                                                                        z0(_z0),
-                                                                                                        z1(_z1), y(_y),
-                                                                                                        material_ptr(
-                                                                                                                std::move(
-                                                                                                                        mat)) {}
+    xz_rect(double _x0, double _x1, double _z0, double _z1, double _y, std::shared_ptr<material> mat) :
+            material_ptr(std::move(mat)), y(_y) {
+        if (_x0 < _x1) {
+            x0 = _x0;
+            x1 = _x1;
+        } else {
+            x0 = _x1;
+            x1 = _x0;
+        }
+        if (_z0 < _z1) {
+            z0 = _z0;
+            z1 = _z1;
+        } else {
+            z0 = _z1;
+            z1 = _z0;
+        }
+    }
 
     bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
 
@@ -69,15 +91,17 @@ public:
 };
 
 bool xz_rect::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    record.t = (y - r.origin.y()) / r.direction.y();
-    if (record.t < t_min || record.t > t_max) {
+    double t = (y - r.origin.y()) / r.direction.y();
+    if (t < t_min || t > t_max) {
         return false;
     }
-    record.hit_point = point3(r.at(record.t));
-    if (record.hit_point.x() < x0 || record.hit_point.x() > x1 || record.hit_point.z() < z0 ||
-        record.hit_point.z() > z1) {
+    auto hit_point = point3(r.at(t));
+    if (hit_point.x() < x0 || hit_point.x() > x1 || hit_point.z() < z0 ||
+        hit_point.z() > z1) {
         return false;
     }
+    record.t = t;
+    record.hit_point = hit_point;
     record.material_ptr = material_ptr;
     record.set_face_normal(r, vec3(0, 1, 0));
     record.exterior_hit = true;
@@ -96,13 +120,23 @@ public:
     double y0, y1, z0, z1, x;
     std::shared_ptr<material> material_ptr;
 
-    yz_rect(double _y0, double _y1, double _z0, double _z1, double _x, std::shared_ptr<material> mat) : y0(_y0),
-                                                                                                        y1(_y1),
-                                                                                                        z0(_z0),
-                                                                                                        z1(_z1), x(_x),
-                                                                                                        material_ptr(
-                                                                                                                std::move(
-                                                                                                                        mat)) {}
+    yz_rect(double _y0, double _y1, double _z0, double _z1, double _x, std::shared_ptr<material> mat) :
+            material_ptr(std::move(mat)), x(_x) {
+        if (_y0 < _y1) {
+            y0 = _y0;
+            y1 = _y1;
+        } else {
+            y0 = _y1;
+            y1 = _y0;
+        }
+        if (_z0 < _z1) {
+            z0 = _z0;
+            z1 = _z1;
+        } else {
+            z0 = _z1;
+            z1 = _z0;
+        }
+    }
 
     bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
 
@@ -110,15 +144,17 @@ public:
 };
 
 bool yz_rect::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    record.t = (x - r.origin.x()) / r.direction.x();
-    if (record.t < t_min || record.t > t_max) {
+    auto t = (x - r.origin.x()) / r.direction.x();
+    if (t < t_min || t > t_max) {
         return false;
     }
-    record.hit_point = point3(r.at(record.t));
-    if (record.hit_point.y() < y0 || record.hit_point.y() > y1 || record.hit_point.z() < z0 ||
-        record.hit_point.z() > z1) {
+    auto hit_point = point3(r.at(t));
+    if (hit_point.y() < y0 || hit_point.y() > y1 || hit_point.z() < z0 ||
+        hit_point.z() > z1) {
         return false;
     }
+    record.t = t;
+    record.hit_point = hit_point;
     record.material_ptr = material_ptr;
     record.set_face_normal(r, vec3(1, 0, 0));
     record.exterior_hit = true;

@@ -13,7 +13,7 @@ public:
     double cos_theta;
 
     rotate_y(std::shared_ptr<hittable> _object, double angle) : object(std::move(_object)) {
-        double radian = angle * 3.1415926 / 180.0;
+        double radian = angle * 3.1415926535897932385 / 180.0;
         sin_theta = sin(radian);
         cos_theta = cos(radian);
     }
@@ -26,22 +26,22 @@ public:
 bool rotate_y::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
     point3 origin = r.origin;
     vec3 direction = r.direction;
-    origin[0] = cos_theta * origin[0] - sin_theta * origin[2];
-    origin[2] = sin_theta * origin[0] + cos_theta * origin[2];
-    direction[0] = cos_theta * direction[0] - sin_theta * direction[2];
-    direction[2] = sin_theta * direction[0] + cos_theta * direction[2];
+    origin[0] = cos_theta * r.origin.value[0] - sin_theta * r.origin.value[2];
+    origin[2] = sin_theta * r.origin.value[0] + cos_theta * r.origin.value[2];
+    direction[0] = cos_theta * r.direction.value[0] - sin_theta * r.direction.value[2];
+    direction[2] = sin_theta * r.direction.value[0] + cos_theta * r.direction.value[2];
     ray r_rotated(origin, direction, r.time);
     if (!object->hit(r_rotated, t_min, t_max, record)) {
         return false;
     }
     point3 hit_p = record.hit_point;
     vec3 normal = record.normal;
-    hit_p.value[0] = cos_theta * hit_p[0] + sin_theta * hit_p[2];
-    hit_p.value[2] = -sin_theta * hit_p[0] + cos_theta * hit_p[2];
-    normal[0] = cos_theta * normal[0] + sin_theta * normal[2];
-    normal[2] = -sin_theta * normal[0] + cos_theta * normal[2];
+    hit_p.value[0] = cos_theta * record.hit_point[0] + sin_theta * record.hit_point[2];
+    hit_p.value[2] = -sin_theta * record.hit_point[0] + cos_theta * record.hit_point[2];
+    normal[0] = cos_theta * record.normal[0] + sin_theta * record.normal[2];
+    normal[2] = -sin_theta * record.normal[0] + cos_theta * record.normal[2];
     record.hit_point = hit_p;
-    record.normal = normal;
+    record.set_face_normal(r, normal);
     return true;
 }
 

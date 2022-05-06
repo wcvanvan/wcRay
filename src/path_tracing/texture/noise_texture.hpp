@@ -82,13 +82,13 @@ public:
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 
-    [[nodiscard]] double turb(const point3& point, int depth=7) const {
+    [[nodiscard]] double turb(const point3 &point, int depth = 7) const {
         auto accum = 0.0;
         auto temp_p = point;
         auto weight = 1.0;
 
         for (int i = 0; i < depth; i++) {
-            accum += weight*noise(temp_p);
+            accum += weight * noise(temp_p);
             weight *= 0.5;
             temp_p *= 2;
         }
@@ -102,8 +102,9 @@ class noise_texture : public texture {
 private:
     perlin *noise{};
     double scale = 1;
+    int mode;
 public:
-    explicit noise_texture(double _scale = 1.0) : scale(_scale) {
+    explicit noise_texture(double _scale = 1.0, int _mode=1) : scale(_scale), mode(_mode) {
         noise = new perlin();
     }
 
@@ -112,7 +113,15 @@ public:
     }
 
     [[nodiscard]] color value(double u, double v, const point3 &p) const override {
-        return color(1,0.6,0.3) * noise->turb(scale * p);
+        return get_color(p);
+    }
+
+    color get_color(const point3 &p) const {
+        if (mode == 1) {
+            return color(1.46, 1.46, 1.46) * noise->turb(scale * p);
+        } else {
+            return color(1.46, 1.46, 1.46) * 0.5 * (1.0 + noise->noise(scale * p));
+        }
     }
 
 };
