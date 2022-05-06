@@ -7,12 +7,5 @@ capable of running the following algorithm
 path tracing
 ```
 
-contains the following texture
-```
-lambertian
-metal
-dielectric
-```
-
-
+The following picture is a exhibition of its functionality
 ![](https://github.com/wcvanvan/Renderer/blob/main/samples/sample1.JPG)
