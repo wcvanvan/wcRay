@@ -1,6 +1,6 @@
-# Renderer
+# SoftWareRenderer
 
-renderer run on CPU
+a software renderer
 
 capable of running the following algorithm
 ```
