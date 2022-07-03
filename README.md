@@ -1,4 +1,4 @@
-# SoftWareRenderer
+# SoftwareRenderer
 
 a software renderer
 
