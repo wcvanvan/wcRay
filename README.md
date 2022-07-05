@@ -1,8 +1,8 @@
-# SoftwareRenderer
+# SoftwareRaytracer
 
-a software renderer
+a software raytracer
 
-capable of running the following algorithm
+running the following algorithm
 ```
 path tracing
 ```
