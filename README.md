@@ -1,11 +1,6 @@
-# SoftwareRaytracer
+# SoftwareRayTracing
 
-a software raytracer
-
-running the following algorithm
-```
-path tracing
-```
+a software path tracing
 
 The following picture is a exhibition of its functionality
 
