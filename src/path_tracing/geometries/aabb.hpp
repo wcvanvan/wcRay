@@ -12,12 +12,12 @@ public:
 
     aabb(const point3 &_point0, const point3 &_point1) : point0(_point0), point1(_point1) {}
 
-    [[nodiscard]] bool hit(const ray &r, double t_min, double t_max) const;
+    [[nodiscard]] bool hit(const Ray &r, double t_min, double t_max) const;
 
     static std::shared_ptr<aabb> surrounding_box(const std::shared_ptr<aabb>& box0, const std::shared_ptr<aabb>& box1);
 };
 
-bool aabb::hit(const ray &r, double t_min, double t_max) const {
+bool aabb::hit(const Ray &r, double t_min, double t_max) const {
     int dimension = 3;
     for (int dim = 0; dim < dimension; ++dim) {
         auto t0 = (point0.value[dim] - r.origin.value[dim]) / r.direction.value[dim];

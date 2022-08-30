@@ -51,12 +51,14 @@ class vec3;
     }
 }
 
-[[nodiscard]] color random_color(double min = 0.0, double max = 1.0) {
+[[nodiscard]] Color random_color(double min = 0.0, double max = 1.0) {
     return {random_number(min, max), random_number(min, max), random_number(min, max)};
 }
-
+/*
+ * Returns a random integer in [min,max].
+ */
 [[nodiscard]] int random_int(int min, int max) {
-    // Returns a random integer in [min,max].
+
     return static_cast<int>(random_number(min, max + 1));
 }
 

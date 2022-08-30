@@ -6,22 +6,22 @@
 #include "hit.hpp"
 #include "../material/isotropic.hpp"
 
-class volumn : public hittable {
+class Volumn : public Hittable {
 public:
-    std::shared_ptr<hittable> boundary;
+    std::shared_ptr<Hittable> boundary;
     double density;
-    std::shared_ptr<isotropic> iso;
+    std::shared_ptr<Isotropic> iso;
 
-    volumn(std::shared_ptr<hittable> obj, double _density, std::shared_ptr<isotropic> _isotropic) :
+    Volumn(std::shared_ptr<Hittable> obj, double _density, std::shared_ptr<Isotropic> _isotropic) :
             boundary(std::move(obj)), density(_density), iso(std::move(_isotropic)) {}
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
-bool volumn::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    hit_record record1, record2;
+bool Volumn::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    HitRecord record1, record2;
     if (!boundary->hit(r, -infinity, infinity, record1)) {
         return false;
     }
@@ -52,7 +52,7 @@ bool volumn::hit(const ray &r, double t_min, double t_max, hit_record &record) c
     return true;
 }
 
-std::shared_ptr<aabb> volumn::bounding_box(double time0, double time1, bool &bounded) const {
+std::shared_ptr<aabb> Volumn::bounding_box(double time0, double time1, bool &bounded) const {
     return boundary->bounding_box(time0, time1, bounded);
 }
 

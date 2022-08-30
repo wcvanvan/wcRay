@@ -9,23 +9,27 @@
 using std::vector;
 using std::shared_ptr;
 
-class hittable_list : public hittable {
+class HittableList : public Hittable {
 public:
 
-    hittable_list() = default;
+    HittableList() = default;
 
 
-    vector<shared_ptr<hittable>> hittable_objects;
+    vector<shared_ptr<Hittable>> hittable_objects;
 
-    void add(const shared_ptr<hittable> &hittable_object) { hittable_objects.push_back(hittable_object); }
+    void add(const shared_ptr<Hittable> &hittable_object) { hittable_objects.push_back(hittable_object); }
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 
+    [[nodiscard]] double pdf_value(const point3 &origin, const vec3 &direction) const override;
+
+    [[nodiscard]] vec3 random_direction(const vec3 &origin) const override;
+
 };
 
-bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
+bool HittableList::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
     double shortest_t = t_max;
     bool hit_something{false};
 
@@ -39,7 +43,7 @@ bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &re
     return hit_something;
 }
 
-std::shared_ptr<aabb> hittable_list::bounding_box(double time0, double time1, bool &bounded) const {
+std::shared_ptr<aabb> HittableList::bounding_box(double time0, double time1, bool &bounded) const {
     if (hittable_objects.empty()) { bounded = false; }
     std::shared_ptr<aabb> output_box = nullptr;
     std::shared_ptr<aabb> temp_box;
@@ -48,9 +52,23 @@ std::shared_ptr<aabb> hittable_list::bounding_box(double time0, double time1, bo
         if (!bounded) {
             return nullptr;
         }
-        output_box = aabb::surrounding_box(std::move(output_box), std::move(temp_box));
+        output_box = aabb::surrounding_box(output_box, temp_box);
     }
     return output_box;
+}
+
+double HittableList::pdf_value(const point3 &origin, const vec3 &direction) const {
+    double sum{0.0};
+    double weight = 1.0 / (double) hittable_objects.size();
+    for (const auto &object: hittable_objects) {
+        sum += weight * object->pdf_value(origin, direction);
+    }
+    return sum;
+}
+
+vec3 HittableList::random_direction(const vec3 &origin) const {
+    auto size = hittable_objects.size();
+    return hittable_objects[random_int(0, (int)size - 1)]->random_direction(origin);
 }
 
 

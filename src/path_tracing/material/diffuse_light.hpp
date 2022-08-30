@@ -6,16 +6,23 @@
 #include "material.hpp"
 #include "../texture/texture.hpp"
 
-class diffuse_light : public material {
+class DiffuseLight : public Material {
 public:
     std::shared_ptr<texture> texture_ptr;
 
-    explicit diffuse_light(std::shared_ptr<texture> tex) : texture_ptr(std::move(tex)) {}
-    bool scatter(const ray &r_in, const hit_record &record, color &albedo, ray &scattered) const override {
+    explicit DiffuseLight(std::shared_ptr<texture> tex) : texture_ptr(std::move(tex)) {}
+
+    bool scatter(
+            const Ray &ray_in, const HitRecord &hit_record, ScatterRecord &scatter_record
+    ) const override {
         return false;
     }
-    color emit(double u, double v, const point3 &point) override {
-        return texture_ptr->value(u, v, point);
+
+    Color emitted(const Ray &ray_in, const HitRecord &hit_record) override {
+        if (!hit_record.exterior_hit) {
+            return {0, 0, 0};
+        }
+        return texture_ptr->value(hit_record.u, hit_record.v, hit_record.hit_point);
     }
 };
 

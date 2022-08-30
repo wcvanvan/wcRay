@@ -2,7 +2,7 @@
 #define RAYTRACING_NOISE_TEXTURE_HPP
 
 #include "texture.hpp"
-#include "../utils.hpp"
+#include "core/utils.hpp"
 #include <cmath>
 
 class perlin {
@@ -112,15 +112,15 @@ public:
         delete noise;
     }
 
-    [[nodiscard]] color value(double u, double v, const point3 &p) const override {
+    [[nodiscard]] Color value(double u, double v, const point3 &p) const override {
         return get_color(p);
     }
 
-    color get_color(const point3 &p) const {
+    Color get_color(const point3 &p) const {
         if (mode == 1) {
-            return color(1.46, 1.46, 1.46) * noise->turb(scale * p);
+            return Color(1.46, 1.46, 1.46) * noise->turb(scale * p);
         } else {
-            return color(1.46, 1.46, 1.46) * 0.5 * (1.0 + noise->noise(scale * p));
+            return Color(1.46, 1.46, 1.46) * 0.5 * (1.0 + noise->noise(scale * p));
         }
     }
 

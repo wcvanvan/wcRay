@@ -2,8 +2,8 @@
 #define RAYTRACING_IMAGE_TEXTURE_HPP
 
 #include "texture.hpp"
-#include "../rt_stb_image.hpp"
-#include "../utils.hpp"
+#include "core/rt_stb_image.hpp"
+#include "core/utils.hpp"
 
 class image_texture : public texture {
     const static int bytes_per_pixel = 3;
@@ -24,10 +24,10 @@ public:
         bytes_per_scanline = bytes_per_pixel * width;
     }
 
-    [[nodiscard]] color value(double u, double v, const point3 &p) const override;
+    [[nodiscard]] Color value(double u, double v, const point3 &p) const override;
 };
 
-color image_texture::value(double u, double v, const point3 &p) const {
+Color image_texture::value(double u, double v, const point3 &p) const {
     if (data == nullptr) {
         return {0,1,1};
     }

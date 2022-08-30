@@ -7,20 +7,20 @@
 #include "aabb.hpp"
 #include "../material/material.hpp"
 
-class moving_sphere : public hittable {
+class moving_sphere : public Hittable {
 public:
     point3 center_start, center_end;
     double radius;
     double time_start, time_end;
-    std::shared_ptr<material> material_ptr;
+    std::shared_ptr<Material> material_ptr;
 
-    explicit moving_sphere(point3 p0, point3 p1, double _radius, std::shared_ptr<material> _material_ptr,
+    explicit moving_sphere(point3 p0, point3 p1, double _radius, std::shared_ptr<Material> _material_ptr,
                            double _time_start, double _time_end) :
             radius(_radius),
             material_ptr(std::move(
                     _material_ptr)), center_start(p0), center_end(p1), time_start{_time_start}, time_end(_time_end) {}
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     [[nodiscard]] point3 get_center(double time) const {
         return center_start + (time - time_start) / (time_start - time_end) * (center_end - center_start);
@@ -29,7 +29,7 @@ public:
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
-bool moving_sphere::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
+bool moving_sphere::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
     vec3 oc = r.origin - get_center(r.time);
     double a = r.direction.dot(r.direction);
     double b = 2 * r.direction.dot(oc);

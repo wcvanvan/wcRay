@@ -3,34 +3,34 @@
 
 #include <memory>
 #include <utility>
-#include "../vec3.hpp"
+#include "core/vec3.hpp"
 #include "hit.hpp"
 
-class rotate_y : public hittable {
+class rotate_y : public Hittable {
 public:
-    std::shared_ptr<hittable> object;
+    std::shared_ptr<Hittable> object;
     double sin_theta;
     double cos_theta;
 
-    rotate_y(std::shared_ptr<hittable> _object, double angle) : object(std::move(_object)) {
+    rotate_y(std::shared_ptr<Hittable> _object, double angle) : object(std::move(_object)) {
         double radian = angle * 3.1415926535897932385 / 180.0;
         sin_theta = sin(radian);
         cos_theta = cos(radian);
     }
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
-bool rotate_y::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
+bool rotate_y::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
     point3 origin = r.origin;
     vec3 direction = r.direction;
     origin[0] = cos_theta * r.origin.value[0] - sin_theta * r.origin.value[2];
     origin[2] = sin_theta * r.origin.value[0] + cos_theta * r.origin.value[2];
     direction[0] = cos_theta * r.direction.value[0] - sin_theta * r.direction.value[2];
     direction[2] = sin_theta * r.direction.value[0] + cos_theta * r.direction.value[2];
-    ray r_rotated(origin, direction, r.time);
+    Ray r_rotated(origin, direction, r.time);
     if (!object->hit(r_rotated, t_min, t_max, record)) {
         return false;
     }

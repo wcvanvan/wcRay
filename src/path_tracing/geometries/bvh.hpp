@@ -3,25 +3,25 @@
 
 #include "hit.hpp"
 #include "aabb.hpp"
-#include "../utils.hpp"
+#include "core/utils.hpp"
 #include <memory>
 #include <vector>
 #include <algorithm>
 
-class bvh_node : public hittable {
+class bvh_node : public Hittable {
 public:
-    std::shared_ptr<hittable> left, right;
+    std::shared_ptr<Hittable> left, right;
     std::shared_ptr<aabb> box;
 
-    bvh_node(const std::vector<std::shared_ptr<hittable>> &objects, int start, int end, double time_start,
+    bvh_node(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
              double time_end);
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
-bool box_compare(const std::shared_ptr<hittable> &h0, const std::shared_ptr<hittable> &h1, int axis) {
+bool box_compare(const std::shared_ptr<Hittable> &h0, const std::shared_ptr<Hittable> &h1, int axis) {
     bool bounded0, bounded1;
     std::shared_ptr<aabb> box0 = h0->bounding_box(0, 0, bounded0);
     std::shared_ptr<aabb> box1 = h1->bounding_box(0, 0, bounded1);
@@ -31,22 +31,22 @@ bool box_compare(const std::shared_ptr<hittable> &h0, const std::shared_ptr<hitt
     return box0->point0.value[axis] < box1->point0.value[axis];
 }
 
-bool box_compare_x(const std::shared_ptr<hittable> &h0, const std::shared_ptr<hittable> &h1) {
+bool box_compare_x(const std::shared_ptr<Hittable> &h0, const std::shared_ptr<Hittable> &h1) {
     return box_compare(h0, h1, 0);
 }
 
-bool box_compare_y(const std::shared_ptr<hittable> &h0, const std::shared_ptr<hittable> &h1) {
+bool box_compare_y(const std::shared_ptr<Hittable> &h0, const std::shared_ptr<Hittable> &h1) {
     return box_compare(h0, h1, 1);
 }
 
-bool box_compare_z(const std::shared_ptr<hittable> &h0, const std::shared_ptr<hittable> &h1) {
+bool box_compare_z(const std::shared_ptr<Hittable> &h0, const std::shared_ptr<Hittable> &h1) {
     return box_compare(h0, h1, 2);
 }
 
 
-bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>> &objects, int start, int end, double time_start,
+bvh_node::bvh_node(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
                    double time_end) {
-    std::vector<std::shared_ptr<hittable>> copy_objects = objects;
+    std::vector<std::shared_ptr<Hittable>> copy_objects = objects;
     int axis = random_int(0, 2);
     auto comparator = box_compare_x;
     if (axis == 1) {
@@ -85,7 +85,7 @@ std::shared_ptr<aabb> bvh_node::bounding_box(double time0, double time1, bool &b
     return box;
 }
 
-bool bvh_node::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
+bool bvh_node::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
     if (!box->hit(r, t_min, t_max)) {
         return false;
     }

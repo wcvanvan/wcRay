@@ -4,7 +4,7 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 
-class camera {
+class Camera {
 private:
     point3 origin;
     vec3 horizontal, vertical;
@@ -14,7 +14,7 @@ private:
     double time_start, time_end;
 
 public:
-    camera(const point3 &look_from, const point3 &look_to, const vec3 &view_up, double fov_vertical,
+    Camera(const point3 &look_from, const point3 &look_to, const vec3 &view_up, double fov_vertical,
            double aspect_ratio, double aperture, double focus_dist, double _time_start,
            double _time_end) : time_start(_time_start), time_end(_time_end) {
         const double radian = degrees_to_radians(fov_vertical);
@@ -30,7 +30,7 @@ public:
         lens_radius = aperture / 2;
     }
 
-    ray get_ray(double vertical_coefficient, double horizontal_coefficient) {
+    Ray get_ray(double vertical_coefficient, double horizontal_coefficient) {
         vec3 offset = lens_radius * random_in_unit_disk();
         point3 ray_start_point =
                 origin + offset.x() * horizontal_unit + offset.y() * vertical_unit;

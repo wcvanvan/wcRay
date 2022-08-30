@@ -8,13 +8,13 @@
 
 using std::make_shared;
 
-class box : public hittable {
+class box : public Hittable {
 private:
-    hittable_list sides;
+    HittableList sides;
     point3 point0, point1;
-    std::shared_ptr<material> material_ptr;
+    std::shared_ptr<Material> material_ptr;
 public:
-    box(const point3 &_point0, const point3 &_point1, std::shared_ptr<material> mat) {
+    box(const point3 &_point0, const point3 &_point1, std::shared_ptr<Material> mat) {
         point0 = _point0;
         point1 = _point1;
         material_ptr = std::move(mat);
@@ -29,7 +29,7 @@ public:
         sides.add(make_shared<yz_rect>(point0.y(), point1.y(), point0.z(), point1.z(), point0.x(), material_ptr));
     }
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override {
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override {
         return sides.hit(r, t_min, t_max, record);
     }
 

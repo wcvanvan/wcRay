@@ -20,4 +20,4 @@ It depends on no other libraries except stb_image to read in images.
 + BVH
 
 ## Gallery
-![](https://github.com/wcvanvan/Renderer/blob/main/samples/Cornell%20box.jpg)
+![](https://github.com/wcvanvan/Renderer/blob/main/samples/sample2.jpg)

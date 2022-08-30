@@ -4,23 +4,26 @@
 #include <utility>
 
 #include "material.hpp"
-#include "../utils.hpp"
+#include "core/utils.hpp"
 #include "../texture/texture.hpp"
 
-class isotropic : public material {
+class Isotropic : public Material {
 public:
     std::shared_ptr<texture> albedo;
 
-    explicit isotropic(std::shared_ptr<texture> tex) : albedo(std::move(tex)) {}
+    explicit Isotropic(std::shared_ptr<texture> tex) : albedo(std::move(tex)) {}
 
-    bool scatter(const ray &r_in, const hit_record &record, color &_albedo, ray &scattered) const override;
+    bool scatter(
+            const Ray &ray_in, const HitRecord &hit_record, ScatterRecord &scatter_record
+    ) const override;
 };
 
-bool isotropic::scatter(const ray &r_in, const hit_record &record, color &_albedo, ray &scattered) const {
-    scattered.direction = random_in_unit_sphere();
-    scattered.origin = r_in.at(record.t);
-    scattered.time = r_in.time;
-    _albedo = albedo->value(record.u, record.v, record.hit_point);
+bool Isotropic::scatter(
+        const Ray &ray_in, const HitRecord &hit_record, ScatterRecord &scatter_record
+) const {
+    scatter_record.is_specular = true;
+    scatter_record.specular_ray = {ray_in.at(hit_record.t), random_in_unit_sphere(), ray_in.time};
+    scatter_record.attenuation = albedo->value(hit_record.u, hit_record.v, hit_record.hit_point);
     return true;
 }
 

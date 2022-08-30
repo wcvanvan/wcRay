@@ -6,21 +6,21 @@
 #include <limits>
 #include <algorithm>
 
-class triangle : public hittable {
+class triangle : public Hittable {
 public:
     point3 A, B, C;
-    std::shared_ptr<material> material_ptr{};
+    std::shared_ptr<Material> material_ptr{};
 
     explicit triangle(const point3 &A_, const point3 &B_, const point3 &C_,
-                      std::shared_ptr<material> _material_ptr) : A(A_), B(B_), C(C_),
+                      std::shared_ptr<Material> _material_ptr) : A(A_), B(B_), C(C_),
                                                                  material_ptr(std::move(_material_ptr)) {};
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 };
 
-bool triangle::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
+bool triangle::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
     bool hit_plane;
     // plane expression: Ax + By + Cz = D
     vec3 normal = (C - A).cross(B - A);

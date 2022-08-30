@@ -21,4 +21,5 @@
 #include "geometries/translate.hpp"
 #include "geometries/rotate.hpp"
 #include "geometries/volumn.hpp"
+#include "geometries/flip_face.hpp"
 #endif //RAYTRACING_PATH_TRACING_HPP

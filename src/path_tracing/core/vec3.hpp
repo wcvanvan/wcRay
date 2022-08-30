@@ -198,7 +198,7 @@ public:
 
 };
 
-using color = vec3;
+using Color = vec3;
 using point3 = vec3;
 
 #endif //VEC3_HPP

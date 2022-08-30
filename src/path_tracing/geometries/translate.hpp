@@ -3,25 +3,25 @@
 
 #include <memory>
 #include <utility>
-#include "../vec3.hpp"
+#include "core/vec3.hpp"
 #include "hit.hpp"
 
-class translate : public hittable {
+class translate : public Hittable {
 public:
     vec3 offset;
-    std::shared_ptr<hittable> object;
+    std::shared_ptr<Hittable> object;
 
-    translate(std::shared_ptr<hittable> _object, const vec3 &displacement) : object(std::move(_object)),
+    translate(std::shared_ptr<Hittable> _object, const vec3 &displacement) : object(std::move(_object)),
                                                                              offset(displacement) {}
 
-    bool hit(const ray &r, double t_min, double t_max, hit_record &record) const override;
+    bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 
     std::shared_ptr<aabb> bounding_box(double time0, double time1, bool &bounded) const override;
 
 };
 
-bool translate::hit(const ray &r, double t_min, double t_max, hit_record &record) const {
-    ray r_moved(r.origin - offset, r.direction, r.time);
+bool translate::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    Ray r_moved(r.origin - offset, r.direction, r.time);
     bool hit = object->hit(r_moved, t_min, t_max, record);
     if (!hit) {
         return false;
