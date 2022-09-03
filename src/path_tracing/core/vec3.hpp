@@ -182,8 +182,6 @@ public:
         return false;
     }
 
-
-
     static vec3 refract(const vec3 &vec_in, const vec3 &n, double etai_over_etat) {
         auto cos_theta = fmin(-vec_in.dot(n), 1.0);
         vec3 r_out_perp = etai_over_etat * (vec_in + cos_theta * n);
@@ -194,6 +192,7 @@ public:
     static vec3 reflect(const vec3 &vec_in, const vec3 &normal) {
         return {vec_in + 2 * ((-1) * vec_in).dot(normal) * normal};
     }
+
 
 
 };

@@ -10,10 +10,10 @@
 
 
 double infinity = std::numeric_limits<double>::infinity();
-double pi = 3.1415926535897932385;
+double PI = 3.1415926535897932385;
 
 double degrees_to_radians(double degrees) {
-    return degrees * pi / 180.;
+    return degrees * PI / 180.;
 }
 
 double clamp(double x, double min, double max) {
@@ -37,7 +37,7 @@ class vec3;
 }
 
 [[nodiscard]] vec3 random_in_unit_sphere() {
-    auto a = random_number(0, 2 * pi);
+    auto a = random_number(0, 2 * PI);
     auto z = random_number(-1, 1);
     auto r = sqrt(1 - z * z);
     return {r * cos(a), r * sin(a), z};

@@ -18,7 +18,7 @@ public:
         return (p[0]->value(direction) + p[1]->value(direction)) * 0.5 ;
     }
 
-    [[nodiscard]] virtual vec3 generate() const override {
+    [[nodiscard]] vec3 generate() const override {
         double random = random_number();
         if (random <= 0.5) {
             return p[0]->generate();

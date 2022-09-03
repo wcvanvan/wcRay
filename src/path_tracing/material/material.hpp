@@ -11,6 +11,7 @@ public:
     Ray specular_ray;
     bool is_specular;
     Color attenuation;
+    Color BRDF;
     std::shared_ptr<PDF> pdf_ptr;
 };
 
@@ -24,12 +25,6 @@ public:
             const Ray &ray_in, const HitRecord &hit_record, ScatterRecord &scatter_record
     ) const {
         return false;
-    }
-
-    [[nodiscard]] virtual double scattering_pdf(
-            const Ray &r_in, const HitRecord &rec, const Ray &scattered
-    ) const {
-        return 0;
     }
 };
 

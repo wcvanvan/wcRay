@@ -8,11 +8,10 @@
 #include "pdf/hittable_pdf.hpp"
 #include "pdf/mixture_pdf.hpp"
 
-
 Color
 ray_color(Ray &ray, const HittableList &world, const std::shared_ptr<Hittable> &lights, Color &background, int depth) {
     if (depth <= 0) {
-        return {0, 0, 0};
+        return {0.0, 0.0, 0.0};
     }
     HitRecord hit_record;
     if (!world.hit(ray, 0.001, infinity, hit_record)) {
@@ -31,9 +30,10 @@ ray_color(Ray &ray, const HittableList &world, const std::shared_ptr<Hittable> &
     double pdf_value{};
     MixturePDF mix_pdf(std::make_shared<HittablePDF>(lights, hit_record.hit_point), scatter_record.pdf_ptr);
     ray_scattered = {hit_record.hit_point, mix_pdf.generate(), ray.time};
+    double NdotL = hit_record.normal.unit_vector().dot(ray_scattered.direction.unit_vector());
     pdf_value = mix_pdf.value(ray_scattered.direction);
     return emitted +
-           scatter_record.attenuation * hit_record.material_ptr->scattering_pdf(ray, hit_record, ray_scattered) *
+           scatter_record.BRDF * NdotL *
            ray_color(ray_scattered, world, lights, background, depth - 1) / pdf_value;
 }
 
@@ -41,11 +41,6 @@ void write_color(std::ostream &out, Color &pixel_color, int samples_per_pixel) {
     double r = pixel_color.x() / samples_per_pixel;
     double g = pixel_color.y() / samples_per_pixel;
     double b = pixel_color.z() / samples_per_pixel;
-
-    // Replace NaN components with zero
-    if (r != r) r = 0.0;
-    if (g != g) g = 0.0;
-    if (b != b) b = 0.0;
 
     r = sqrt(r);
     g = sqrt(g);

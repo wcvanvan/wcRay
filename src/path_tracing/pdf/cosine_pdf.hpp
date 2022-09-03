@@ -4,14 +4,14 @@
 #include "pdf.hpp"
 #include "core/onb.hpp"
 
-vec3 random_cosine_direction() {
+vec3 random_uniform_direction() {
     auto r1 = random_number();
     auto r2 = random_number();
-    auto z = sqrt(1-r2);
+    auto z = sqrt(1 - r2);
 
-    auto phi = 2*pi*r1;
-    auto x = cos(phi)*sqrt(r2);
-    auto y = sin(phi)*sqrt(r2);
+    auto phi = 2 * PI * r1;
+    auto x = cos(phi) * sqrt(r2);
+    auto y = sin(phi) * sqrt(r2);
 
     return {x, y, z};
 }
@@ -26,11 +26,11 @@ public:
 
     [[nodiscard]] double value(const vec3 &direction) const override {
         auto cosine = direction.unit_vector().dot(uvw.w());
-        return std::max(0.0, cosine / pi);
+        return std::max(0.0, cosine / PI);
     }
 
     [[nodiscard]] vec3 generate() const override {
-        return uvw.local(random_cosine_direction());
+        return uvw.local(random_uniform_direction());
     }
 };
 

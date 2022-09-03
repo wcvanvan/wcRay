@@ -11,7 +11,7 @@ vec3 random_to_sphere(double radius, double distance_squared) {
     auto r2 = random_number();
     auto z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
 
-    auto phi = 2 * pi * r1;
+    auto phi = 2 * PI * r1;
     auto x = cos(phi) * sqrt(1 - z * z);
     auto y = sin(phi) * sqrt(1 - z * z);
 
@@ -72,9 +72,9 @@ std::shared_ptr<aabb> sphere::bounding_box(double time0, double time1, bool &bou
 
 void sphere::get_sphere_uv(const point3 &p, double &u, double &v) {
     double theta = acos(-p.y());
-    double phi = atan2(-p.z(), p.x()) + pi;
-    u = phi / (2 * pi);
-    v = theta / pi;
+    double phi = atan2(-p.z(), p.x()) + PI;
+    u = phi / (2 * PI);
+    v = theta / PI;
 }
 
 double sphere::pdf_value(const point3 &origin, const vec3 &direction) const {
@@ -83,7 +83,7 @@ double sphere::pdf_value(const point3 &origin, const vec3 &direction) const {
         return 0;
 
     auto cos_theta_max = sqrt(1 - radius * radius / (center - origin).length_squared());
-    auto solid_angle = 2 * pi * (1 - cos_theta_max);
+    auto solid_angle = 2 * PI * (1 - cos_theta_max);
 
     return 1 / solid_angle;
 }
