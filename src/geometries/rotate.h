@@ -7,13 +7,13 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    class rotate_y : public Hittable {
+    class RotateY : public Hittable {
     public:
         std::shared_ptr<Hittable> object;
         double sin_theta;
         double cos_theta;
 
-        rotate_y(std::shared_ptr<Hittable> _object, double angle);
+        RotateY(std::shared_ptr<Hittable> _object, double angle);
 
         bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 

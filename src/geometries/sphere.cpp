@@ -15,13 +15,13 @@ WCRAY_NAMESPACE_BEGIN
     }
 
 
-    sphere::sphere(const Point3 &p, double _radius, std::shared_ptr<Material> _material_ptr) : center(p),
+    Sphere::Sphere(const Point3 &p, double _radius, std::shared_ptr<Material> _material_ptr) : center(p),
                                                                                                radius(_radius),
                                                                                                material_ptr(std::move(
                                                                                                        _material_ptr)) {};
 
 
-    bool sphere::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    bool Sphere::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
         Vec3 oc = r.origin - center;
         double a = dot(r.direction, r.direction);
         double b = 2 * dot(r.direction, oc);
@@ -41,24 +41,24 @@ WCRAY_NAMESPACE_BEGIN
         record.hit_point = r.at(root);
         record.set_face_normal(r, normalize(record.hit_point - center));
         record.material_ptr = material_ptr;
-        sphere::get_sphere_uv(record.normal, record.u, record.v);
+        Sphere::get_sphere_uv(record.normal, record.u, record.v);
         return true;
     }
 
-    std::shared_ptr<AABB> sphere::bounding_box(double time0, double time1, bool &bounded) const {
+    std::shared_ptr<AABB> Sphere::bounding_box(double time0, double time1, bool &bounded) const {
         bounded = true;
         return std::make_shared<AABB>(
                 AABB(center - Point3(radius, radius, radius), center + Point3(radius, radius, radius)));
     }
 
-    void sphere::get_sphere_uv(const Point3 &p, double &u, double &v) {
+    void Sphere::get_sphere_uv(const Point3 &p, double &u, double &v) {
         double theta = acos(-p.y());
         double phi = atan2(-p.z(), p.x()) + PI;
         u = phi / (2 * PI);
         v = theta / PI;
     }
 
-    double sphere::pdf_value(const Point3 &origin, const Vec3 &direction) const {
+    double Sphere::pdf_value(const Point3 &origin, const Vec3 &direction) const {
         HitRecord rec;
         if (!this->hit(Ray(origin, direction), 0.001, infinity, rec))
             return 0;
@@ -69,7 +69,7 @@ WCRAY_NAMESPACE_BEGIN
         return 1 / solid_angle;
     }
 
-    Vec3 sphere::random_direction(const Vec3 &origin) const {
+    Vec3 Sphere::random_direction(const Vec3 &origin) const {
         Vec3 direction = center - origin;
         auto distance_squared = length_squared(direction);
         ONB uvw;

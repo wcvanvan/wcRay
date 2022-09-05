@@ -27,12 +27,12 @@ std::shared_ptr<HittableList> final_scene() {
 
     // smoke box
     shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, Vec3(265, 0, 295));
+    box1 = make_shared<RotateY>(box1, 15);
+    box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
 
     shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
-    box2 = make_shared<rotate_y>(box2, -18);
-    box2 = make_shared<translate>(box2, Vec3(130, 0, 65));
+    box2 = make_shared<RotateY>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
 
     objects.add(make_shared<Volumn>(box1, 0.01,
                                     std::make_shared<Isotropic>(std::make_shared<solid_color>(Color(1, 1, 1)))));
@@ -40,19 +40,19 @@ std::shared_ptr<HittableList> final_scene() {
                                     std::make_shared<Isotropic>(std::make_shared<solid_color>(Color(0, 0, 0)))));
 
 //    // Fill with spheres
-    auto earth_texture = make_shared<ImageTexture>(R"(D:\Projects\SoftwarePathTracing\resources\earthmap.jpg)");
+    auto earth_texture = make_shared<ImageTexture>(R"(D:\Projects\wcRay\resources\earthmap.jpg)");
     auto earth_surface = make_shared<Lambertian>(earth_texture);
-    auto globe = make_shared<sphere>(Point3(310, 400, 165), 50, earth_surface);
+    auto globe = make_shared<Sphere>(Point3(310, 400, 165), 50, earth_surface);
     objects.add(globe);
 
     auto white_metal = std::make_shared<Metal>(Color(.73, .73, .73), 0);
-    objects.add(std::make_shared<sphere>(Point3(170, 250, 220), 50, white_metal));
+    objects.add(std::make_shared<Sphere>(Point3(170, 250, 220), 50, white_metal));
 
-    auto mov_sphere = make_shared<moving_sphere>(Point3(140, 450, 350), Point3(190, 450, 350), 50,
+    auto mov_sphere = make_shared<MovingSphere>(Point3(140, 450, 350), Point3(190, 450, 350), 50,
                                                  make_shared<Lambertian>(Color(0.4, 0.4, 0.5)), 0.0, 1.0);
     objects.add(mov_sphere);
 
-    objects.add(make_shared<sphere>(Point3(490, 370, 350), 50, make_shared<Dielectric>(1.5)));
+    objects.add(make_shared<Sphere>(Point3(490, 370, 350), 50, make_shared<Dielectric>(1.5)));
 
     return std::make_shared<HittableList>(objects);
 }
@@ -72,20 +72,20 @@ shared_ptr<HittableList> cornell_box() {
     objects.add(make_shared<XYRect>(0, 555, 0, 555, 555, white));
 
     shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, Vec3(265, 0, 295));
+    box1 = make_shared<RotateY>(box1, 15);
+    box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
     objects.add(box1);
 
     shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
 
-    box2 = make_shared<rotate_y>(box2, -18);
-    box2 = make_shared<translate>(box2, Vec3(130, 0, 65));
+    box2 = make_shared<RotateY>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
     objects.add(box2);
     return std::make_shared<HittableList>(objects);
 }
 
 int main() {
-    std::ofstream file(R"(D:\Projects\SoftwarePathTracing\pic.ppm)");
+    std::ofstream file(R"(D:\Projects\wcRay\pic.ppm)");
     int scene = 1;
     shared_ptr<HittableList> world;
     double aspect_ratio;
@@ -122,7 +122,7 @@ int main() {
             lookat = Point3(278, 278, 0);
             vfov = 40.0;
             lights->add(make_shared<XZRect>(200, 360, 220, 340, 554.99, nullptr));
-            lights->add(make_shared<sphere>(Point3(490, 370, 350), 50, nullptr));
+            lights->add(make_shared<Sphere>(Point3(490, 370, 350), 50, nullptr));
             break;
         default:
             break;
@@ -131,7 +131,7 @@ int main() {
     auto dist_to_focus = 10.0;
     image_height = static_cast<int>(image_width / aspect_ratio);
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    auto bvh = make_shared<bvh_node>(world->hittable_objects, 0, world->hittable_objects.size(), 0, 1);
+    auto bvh = make_shared<BVHNode>(world->hittable_objects, 0, world->hittable_objects.size(), 0, 1);
     auto *objects = new HittableList;
     objects->add(bvh);
 

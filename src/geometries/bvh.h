@@ -9,12 +9,12 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    class bvh_node : public Hittable {
+    class BVHNode : public Hittable {
     public:
         std::shared_ptr<Hittable> left, right;
         std::shared_ptr<AABB> box;
 
-        bvh_node(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
+        BVHNode(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
                  double time_end);
 
         bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;

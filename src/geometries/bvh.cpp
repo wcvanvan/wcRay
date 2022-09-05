@@ -26,7 +26,7 @@ WCRAY_NAMESPACE_BEGIN
     }
 
 
-    bvh_node::bvh_node(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
+    BVHNode::BVHNode(const std::vector<std::shared_ptr<Hittable>> &objects, int start, int end, double time_start,
                        double time_end) {
         std::vector<std::shared_ptr<Hittable>> copy_objects = objects;
         int axis = random_int(0, 2);
@@ -50,8 +50,8 @@ WCRAY_NAMESPACE_BEGIN
         } else {
             std::sort(copy_objects.begin() + start, copy_objects.begin() + end, comparator);
             size_t mid = start + object_span / 2;
-            left = std::make_shared<bvh_node>(copy_objects, start, mid + 1, time_start, time_end);
-            right = std::make_shared<bvh_node>(copy_objects, mid + 1, end, time_start, time_end);
+            left = std::make_shared<BVHNode>(copy_objects, start, mid + 1, time_start, time_end);
+            right = std::make_shared<BVHNode>(copy_objects, mid + 1, end, time_start, time_end);
         }
         bool bounded0, bounded1;
         auto box_left = left->bounding_box(time_start, time_end, bounded0);
@@ -62,12 +62,12 @@ WCRAY_NAMESPACE_BEGIN
         box = AABB::surrounding_box(box_left, box_right);
     }
 
-    std::shared_ptr<AABB> bvh_node::bounding_box(double time0, double time1, bool &bounded) const {
+    std::shared_ptr<AABB> BVHNode::bounding_box(double time0, double time1, bool &bounded) const {
         bounded = true;
         return box;
     }
 
-    bool bvh_node::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    bool BVHNode::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
         if (!box->hit(r, t_min, t_max)) {
             return false;
         }

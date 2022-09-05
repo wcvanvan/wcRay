@@ -8,13 +8,13 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    class sphere : public Hittable {
+    class Sphere : public Hittable {
     public:
         Point3 center;
         double radius;
         std::shared_ptr<Material> material_ptr;
 
-        explicit sphere(const Point3 &p, double _radius, std::shared_ptr<Material> _material_ptr);
+        explicit Sphere(const Point3 &p, double _radius, std::shared_ptr<Material> _material_ptr);
 
         bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;
 

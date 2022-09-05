@@ -5,7 +5,7 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    moving_sphere::moving_sphere(const Point3 &p0, const Point3 &p1, double _radius,
+    MovingSphere::MovingSphere(const Point3 &p0, const Point3 &p1, double _radius,
                                  std::shared_ptr<Material> _material_ptr,
                                  double _time_start, double _time_end) :
             radius(_radius),
@@ -13,12 +13,12 @@ WCRAY_NAMESPACE_BEGIN
                     _material_ptr)), center_start(p0), center_end(p1), time_start{_time_start}, time_end(_time_end) {}
 
 
-    [[nodiscard]] Point3 moving_sphere::get_center(double time) const {
+    [[nodiscard]] Point3 MovingSphere::get_center(double time) const {
         return center_start + (time - time_start) / (time_start - time_end) * (center_end - center_start);
     }
 
 
-    bool moving_sphere::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    bool MovingSphere::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
         Vec3 oc = r.origin - get_center(r.time);
         double a = dot(r.direction, r.direction);
         double b = 2 * dot(r.direction, oc);
@@ -46,7 +46,7 @@ WCRAY_NAMESPACE_BEGIN
         return true;
     }
 
-    std::shared_ptr<AABB> moving_sphere::bounding_box(double time0, double time1, bool &bounded) const {
+    std::shared_ptr<AABB> MovingSphere::bounding_box(double time0, double time1, bool &bounded) const {
         bounded = true;
         auto box0 = std::make_shared<AABB>(
                 get_center(time0) - radius,

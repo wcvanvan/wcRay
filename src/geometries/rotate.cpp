@@ -2,14 +2,14 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    rotate_y::rotate_y(std::shared_ptr<Hittable> object_, double angle) : object(std::move(object_)) {
+    RotateY::RotateY(std::shared_ptr<Hittable> object_, double angle) : object(std::move(object_)) {
         double radian = angle * 3.1415926535897932385 / 180.0;
         sin_theta = sin(radian);
         cos_theta = cos(radian);
     }
 
 
-    bool rotate_y::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    bool RotateY::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
         Point3 origin = r.origin;
         Vec3 direction = r.direction;
         origin[0] = cos_theta * r.origin.value[0] - sin_theta * r.origin.value[2];
@@ -31,7 +31,7 @@ WCRAY_NAMESPACE_BEGIN
         return true;
     }
 
-    std::shared_ptr<AABB> rotate_y::bounding_box(double time0, double time1, bool &bounded) const {
+    std::shared_ptr<AABB> RotateY::bounding_box(double time0, double time1, bool &bounded) const {
         auto origin_box = object->bounding_box(time0, time1, bounded);
         if (!bounded) {
             std::cerr << "no bounding box" << std::endl;

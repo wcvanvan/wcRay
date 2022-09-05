@@ -2,7 +2,7 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    int perlin::permutation[256] = {151, 160, 137, 91, 90, 15,
+    int Perlin::permutation[256] = {151, 160, 137, 91, 90, 15,
                                     131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30,
                                     69, 142, 8, 99, 37, 240, 21, 10, 23,
                                     190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32,
@@ -28,18 +28,18 @@ WCRAY_NAMESPACE_BEGIN
                                     138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128,
                                     195, 78, 66, 215, 61, 156, 180};
 
-    perlin::perlin() {
+    Perlin::Perlin() {
         p = new int[512];
         for (int i = 0; i < 256; ++i) {
             p[i + 256] = p[i] = permutation[i];
         }
     }
 
-    perlin::~perlin() {
+    Perlin::~Perlin() {
         delete[] p;
     }
 
-    [[nodiscard]] double perlin::noise(const Point3 &point) const {
+    [[nodiscard]] double Perlin::noise(const Point3 &point) const {
         double x = point.x(), y = point.y(), z = point.z();
         int X = (int) floor(x) & 255,                  // FIND UNIT CUBE THAT
         Y = (int) floor(y) & 255,                  // CONTAINS POINT.
@@ -63,7 +63,7 @@ WCRAY_NAMESPACE_BEGIN
                               grad(p[BB + 1], x - 1, y - 1, z - 1))));
     }
 
-    [[nodiscard]] double perlin::turb(const Point3 &point, int depth) const {
+    [[nodiscard]] double Perlin::turb(const Point3 &point, int depth) const {
         auto accum = 0.0;
         auto temp_p = point;
         auto weight = 1.0;
@@ -79,7 +79,7 @@ WCRAY_NAMESPACE_BEGIN
 
 
     NoiseTexture::NoiseTexture(double scale_, int mode_) : scale(scale_), mode(mode_) {
-        noise = new perlin();
+        noise = new Perlin();
     }
 
     NoiseTexture::~NoiseTexture() {

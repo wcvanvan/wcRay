@@ -5,15 +5,15 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    class perlin {
+    class Perlin {
     private:
         static int permutation[256];
         int *p;
     public:
 
-        perlin();
+        Perlin();
 
-        ~perlin();
+        ~Perlin();
 
         [[nodiscard]] double noise(const Point3 &point) const;
 
@@ -24,7 +24,7 @@ WCRAY_NAMESPACE_BEGIN
 
     class NoiseTexture : public texture {
     private:
-        perlin *noise{};
+        Perlin *noise{};
         double scale = 1;
         int mode;
     public:

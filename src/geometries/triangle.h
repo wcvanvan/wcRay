@@ -6,12 +6,12 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    class triangle : public Hittable {
+    class Triangle : public Hittable {
     public:
         Point3 A, B, C;
         std::shared_ptr<Material> material_ptr{};
 
-        explicit triangle(const Point3 &A_, const Point3 &B_, const Point3 &C_,
+        explicit Triangle(const Point3 &A_, const Point3 &B_, const Point3 &C_,
                           std::shared_ptr<Material> _material_ptr);
 
         bool hit(const Ray &r, double t_min, double t_max, HitRecord &record) const override;

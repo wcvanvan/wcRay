@@ -5,11 +5,11 @@
 WCRAY_NAMESPACE_BEGIN
 
 
-    triangle::triangle(const Point3 &A_, const Point3 &B_, const Point3 &C_,
+    Triangle::Triangle(const Point3 &A_, const Point3 &B_, const Point3 &C_,
                        std::shared_ptr<Material> _material_ptr) : A(A_), B(B_), C(C_),
                                                                   material_ptr(std::move(_material_ptr)) {};
 
-    bool triangle::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
+    bool Triangle::hit(const Ray &r, double t_min, double t_max, HitRecord &record) const {
         bool hit_plane;
         // plane expression: Ax + By + Cz = D
         Vec3 normal = cross(C - A, B - A);
@@ -38,7 +38,7 @@ WCRAY_NAMESPACE_BEGIN
         return true;
     }
 
-    std::shared_ptr<AABB> triangle::bounding_box(double time0, double time1, bool &bounded) const {
+    std::shared_ptr<AABB> Triangle::bounding_box(double time0, double time1, bool &bounded) const {
         bounded = true;
         double x_min = std::min(std::min(A.x(), B.x()), C.x());
         double y_min = std::min(std::min(A.y(), B.y()), C.y());
