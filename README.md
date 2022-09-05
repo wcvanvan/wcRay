@@ -21,4 +21,4 @@ It depends on no other libraries except stb_image to read in images.
     - BVH
 
 ## Gallery
-![](https://github.com/wcvanvan/Renderer/blob/main/samples/sample2.jpg)
+![](https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image2.jpg)
