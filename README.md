@@ -5,11 +5,14 @@ It depends on no other libraries except stb_image to read in images.
 
 ## List of Features 
 - **Importance Sampling**
+
 - **Materials**
     - Lambertian
     - Metal
     - Dielectric
     - Participating media
+  
+- **Texture**
     - Perlin noise
     - Texture mapping
 
