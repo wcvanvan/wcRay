@@ -1,4 +1,4 @@
-# SoftwarePathTracing
+# wcRay
 A software path tracing program, implemented in modern C++. 
 
 It depends on no other libraries except stb_image to read in images.
@@ -13,8 +13,8 @@ It depends on no other libraries except stb_image to read in images.
     - Participating media
   
 - **Texture**
-    - Perlin noise
-    - Texture mapping
+    - Perlin Noise
+    - Texture Mapping
 
 - **Camera Functionalities**
     - Defocus Blur
