@@ -24,5 +24,7 @@ It depends on no other libraries except stb_image to read in images.
     - BVH
 
 ## Gallery
-![](https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image2.jpg =250x250)
-![](https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image1.jpg =250x250)
+
+<img src="https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image2.jpg" width="300">
+
+<img src="https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image1.jpg" width="500">
