@@ -1,8 +1,10 @@
 #include "path_tracing.h"
 #include <iostream>
 #include <fstream>
-#include <thread>
 #include <memory>
+#include <thread>
+#include <algorithm>
+#include <omp.h>
 
 using std::make_shared;
 using std::shared_ptr;
@@ -49,7 +51,7 @@ std::shared_ptr<HittableList> final_scene() {
     objects.add(std::make_shared<Sphere>(Point3(170, 250, 220), 50, white_metal));
 
     auto mov_sphere = make_shared<MovingSphere>(Point3(140, 450, 350), Point3(190, 450, 350), 50,
-                                                 make_shared<Lambertian>(Color(0.4, 0.4, 0.5)), 0.0, 1.0);
+                                                make_shared<Lambertian>(Color(0.4, 0.4, 0.5)), 0.0, 1.0);
     objects.add(mov_sphere);
 
     objects.add(make_shared<Sphere>(Point3(490, 370, 350), 50, make_shared<Dielectric>(1.5)));
@@ -84,27 +86,56 @@ shared_ptr<HittableList> cornell_box() {
     return std::make_shared<HittableList>(objects);
 }
 
+shared_ptr<HittableList> world;
+Camera *cam;
+shared_ptr<HittableList> lights;
+HittableList *objects;
+double aspect_ratio;
+int image_width;
+int samples_per_pixel;
+int image_height;
+int depth = 50;
+Color background;
+Point3 lookfrom;
+Point3 lookat;
+double aperture = 0.0;
+double vfov;
+std::ofstream file;
+int num_threads;
+Color **image;
+
+void render() {
+    #pragma omp parallel for
+    for (int height = image_height-1; height >= 0; --height) {
+        std::cout << "\rScanlines: " << height << '\n' << std::flush;
+        for (int width = 0; width < image_width; ++width) {
+            auto *pixel_color = new Color(0.0, 0.0, 0.0);
+            for (int sample = 0; sample < samples_per_pixel; ++sample) {
+                Ray r = cam->get_ray(
+                        ((double) height + random_number()) / (image_height - 1),
+                        ((double) width + random_number()) / (image_width - 1));
+                Color r_color(ray_color(r, *objects, lights, background, depth));
+                *pixel_color += r_color;
+            }
+            image[(image_height - height - 1) * image_height + width] = pixel_color;
+        }
+    }
+}
+
+
 int main() {
-    std::ofstream file(R"(D:\Projects\wcRay\pic.ppm)");
+    file = std::ofstream(R"(E:\Projects\wcRay\pic.ppm)");
     int scene = 1;
-    shared_ptr<HittableList> world;
-    double aspect_ratio;
-    int image_width;
-    int samples_per_pixel;
-    int image_height;
-    int depth = 50;
-    Color background;
-    Point3 lookfrom;
-    Point3 lookat;
-    double aperture = 0.0;
-    double vfov;
+    num_threads = std::thread::hardware_concurrency();
+    omp_set_num_threads(num_threads);
+
     // lights is the list of direct sampling objects
-    shared_ptr<HittableList> lights(new HittableList);
+    lights = std::make_shared<HittableList>();
     switch (scene) {
         case 1:
             world = cornell_box();
             aspect_ratio = 1.0;
-            image_width = 100;
+            image_width = 300;
             samples_per_pixel = 200;
             background = Color(0, 0, 0);
             lookfrom = Point3(278, 278, -800);
@@ -127,30 +158,19 @@ int main() {
         default:
             break;
     }
+    image_height = static_cast<int>(image_width / aspect_ratio);
+    image = new Color *[image_width * image_height];
     Vec3 vup(0, 1, 0);
     auto dist_to_focus = 10.0;
-    image_height = static_cast<int>(image_width / aspect_ratio);
-    Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
+    cam = new Camera(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
     auto bvh = make_shared<BVHNode>(world->hittable_objects, 0, world->hittable_objects.size(), 0, 1);
-    auto *objects = new HittableList;
+    objects = new HittableList;
     objects->add(bvh);
 
     file << "P3\n" << image_width << " " << image_height << "\n255\n";
     auto start_time = std::chrono::system_clock::now();
-    for (int height = image_height - 1; height >= 0; --height) {
-        std::cout << "\rScanlines remaining: " << height << '\n' << std::flush;
-        for (int width = 0; width < image_width; ++width) {
-            Color pixel_color(0.0, 0.0, 0.0);
-            for (int sample = 0; sample < samples_per_pixel; ++sample) {
-                Ray r = cam.get_ray(
-                        ((double) height + random_number()) / (image_height - 1),
-                        ((double) width + random_number()) / (image_width - 1));
-                Color r_color(ray_color(r, *objects, lights, background, depth));
-                pixel_color += r_color;
-            }
-            write_color(file, pixel_color, samples_per_pixel);
-        }
-    }
+    render();
+    write_color(file, image, samples_per_pixel, image_height, image_width);
     auto end_time = std::chrono::system_clock::now();
     std::cerr << "\nDone.\n";
     std::cout << "time: " << double((end_time - start_time).count()) / pow(10, 9) << "s" << std::endl;

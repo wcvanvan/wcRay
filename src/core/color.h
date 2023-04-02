@@ -14,7 +14,7 @@ WCRAY_NAMESPACE_BEGIN
     ray_color(Ray &ray, const HittableList &world, const std::shared_ptr<Hittable> &lights, Color &background,
               int depth);
 
-    void write_color(std::ostream &out, Color &pixel_color, int samples_per_pixel);
+    void write_color(std::ostream &out, Color **image, int samples_per_pixel, int image_height, int image_width);
 
 WCRAY_NAMESPACE_END
 

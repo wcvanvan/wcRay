@@ -1,7 +1,7 @@
 # wcRay
 A software path tracing program, implemented in modern C++. 
 
-It depends on no other libraries except stb_image to read in images.
+OpenMP is used to implement parallelism.
 
 ## List of Features 
 - **Importance Sampling**
