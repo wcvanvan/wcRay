@@ -26,6 +26,6 @@ OpenMP is used to implement parallelism.
 
 ## Gallery
 
-<img src="https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image2.jpg" width="300">
+<img src="https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image2.jpg" width="500">
 
 <img src="https://github.com/wcvanvan/Renderer/blob/main/rendered_images/image1.jpg" width="500">
