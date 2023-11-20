@@ -1,7 +1,7 @@
 # wcRay
 A software path tracing program, implemented in modern C++. 
 
-OpenMP is used to implement parallelism.
+OpenMP is used to support multi-threading.
 
 ## List of Features 
 - **Importance Sampling**
