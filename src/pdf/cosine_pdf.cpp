@@ -2,7 +2,7 @@
 
 WCRAY_NAMESPACE_BEGIN
 
-    Vec3 random_uniform_direction() {
+    Vec3 random_cosine_direction() {
         auto r1 = random_number();
         auto r2 = random_number();
         auto z = sqrt(1 - r2);
@@ -24,7 +24,7 @@ WCRAY_NAMESPACE_BEGIN
     }
 
     [[nodiscard]] Vec3 CosinePDF::generate() const {
-        return uvw.local(random_uniform_direction());
+        return uvw.local(random_cosine_direction());
     }
 
 WCRAY_NAMESPACE_END
