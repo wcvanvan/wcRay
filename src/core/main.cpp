@@ -125,7 +125,7 @@ void render() {
 
 
 int main() {
-    file = std::ofstream(R"(E:\Projects\wcRay\pic.ppm)");
+    file = std::ofstream(R"(./pic.ppm)");
     int scene = 1;
     num_threads = std::thread::hardware_concurrency();
     omp_set_num_threads(num_threads);
