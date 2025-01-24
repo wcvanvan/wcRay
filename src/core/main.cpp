@@ -4,7 +4,7 @@
 #include <memory>
 #include <thread>
 #include <algorithm>
-#include "/opt/homebrew/opt/libomp/include/omp.h"
+#include <omp.h>
 
 
 using std::make_shared;
