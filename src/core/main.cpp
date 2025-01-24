@@ -4,7 +4,8 @@
 #include <memory>
 #include <thread>
 #include <algorithm>
-#include <omp.h>
+#include "/opt/homebrew/opt/libomp/include/omp.h"
+
 
 using std::make_shared;
 using std::shared_ptr;
@@ -107,7 +108,7 @@ Color **image;
 void render() {
     #pragma omp parallel for
     for (int height = image_height-1; height >= 0; --height) {
-        std::cout << "\rScanlines: " << height << '\n' << std::flush;
+        // std::cout << "\rScanlines: " << height << '\n' << std::flush;
         for (int width = 0; width < image_width; ++width) {
             auto *pixel_color = new Color(0.0, 0.0, 0.0);
             for (int sample = 0; sample < samples_per_pixel; ++sample) {
@@ -168,11 +169,10 @@ int main() {
     objects->add(bvh);
 
     file << "P3\n" << image_width << " " << image_height << "\n255\n";
-    auto start_time = std::chrono::system_clock::now();
+    auto start_time = std::chrono::steady_clock::now();
     render();
+    auto end_time = std::chrono::steady_clock::now();
     write_color(file, image, samples_per_pixel, image_height, image_width);
-    auto end_time = std::chrono::system_clock::now();
-    std::cerr << "\nDone.\n";
     std::cout << "time: " << double((end_time - start_time).count()) / pow(10, 9) << "s" << std::endl;
 
 }

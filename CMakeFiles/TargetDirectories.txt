@@ -1,0 +1,3 @@
+/Users/wencheng/Projects/wcRay/CMakeFiles/wcRay.dir
+/Users/wencheng/Projects/wcRay/CMakeFiles/edit_cache.dir
+/Users/wencheng/Projects/wcRay/CMakeFiles/rebuild_cache.dir
